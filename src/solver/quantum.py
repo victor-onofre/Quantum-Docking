@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 from pulser import Pulse, Sequence
-from pulser.devices import Chadoq2
+from pulser.devices import DigitalAnalogDevice
 from pulser.waveforms import InterpolatedWaveform, RampWaveform
 from pulser_simulation import QutipEmulator
 from scipy.optimize import minimize
@@ -146,7 +146,7 @@ def complex_quantum_loop(parameters, register):
     ) = np.reshape(params.astype(int), 5)
 
     seq = complex_adiabatic_sequence(
-        Chadoq2,
+        DigitalAnalogDevice,
         register,
         parameter_time1,
         parameter_time2,
@@ -167,7 +167,7 @@ def simple_quantum_loop(parameters, register):
 
     parameter_time, parameter_omega, parameter_detuning = np.reshape(params.astype(int), 3)
     seq = simple_adiabatic_sequence(
-        Chadoq2,
+        DigitalAnalogDevice,
         register,
         parameter_time,
         Omega=parameter_omega,
@@ -251,7 +251,7 @@ def VQAA(
                 x0=np.r_[random_time1, random_omega, random_detuning1],
                 method=minimizer_method,
                 tol=1e-5,
-                options={"maxiter": 200},
+                options={"maxiter": 20},
             )
 
         # print(res.fun)

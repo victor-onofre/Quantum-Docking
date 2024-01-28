@@ -25,12 +25,13 @@ def _evaluate_mapping(new_coords, *args):
     return np.linalg.norm(new_Q - x)
 
 
-def map_to_UDG(G: nx.graph) -> dict:
+def map_to_UDG(G: nx.graph, optimizer="COBYLA") -> dict:
     """Maps a given graph to a UDG compatible position.
        This is a heuristic, there is no guarantee that the position is reached or even exists.
 
     Args:
         G (nx.graph): Networkx graph.
+        optimizer: optimizer used in minimizer
 
     Returns:
         dict: A dictionnary containing {node: position} pairs.
@@ -42,8 +43,8 @@ def map_to_UDG(G: nx.graph) -> dict:
     res = minimize(
         _evaluate_mapping,
         x0,
-        args=(adjacency_matrix * 5, shape),
-        method="COBYLA",
+        args=(adjacency_matrix * 3, shape),
+        method=optimizer,
         tol=1e-6,
         options={"maxiter": 2e5},
     )
