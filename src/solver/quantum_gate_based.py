@@ -11,6 +11,9 @@ def solver_QAOA_gate_based(
     print_circuit=False,
     print_cost_history=False,
     print_hamiltonian=False,
+    shots=1024,
+    initial_type="ramp",
+    parameter_type="standard",
 ):
     problem = MIS(graph)
     qubo_problem = problem.qubo
@@ -23,11 +26,11 @@ def solver_QAOA_gate_based(
     q_problem.set_device(qiskit_device)
     q_problem.set_circuit_properties(
         p=p_layer,
-        param_type="standard",
-        init_type="rand",
+        param_type=parameter_type,
+        init_type=initial_type,
         mixer_hamiltonian="x",
     )
-    q_problem.set_backend_properties(n_shots=1024, seed_simulator=1)
+    q_problem.set_backend_properties(n_shots=shots, seed_simulator=1)
     q_problem.set_classical_optimizer(
         method=optimizer,
         maxiter=200,
@@ -49,5 +52,6 @@ def solver_QAOA_gate_based(
     if print_cost_history:
         opt_results.plot_cost(figsize=(7, 4), label="qaoa")
 
-    print("Best solution:", correct_solution[1])
+    print("Best solution:", opt_results.lowest_cost_bitstrings(6))
+    print("Correct solution:", correct_solution)
     opt_results.plot_probabilities(label="Probability distribution - QAOA over MIS")
